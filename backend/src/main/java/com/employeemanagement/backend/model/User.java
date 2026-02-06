@@ -14,6 +14,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
     @Column(unique = true)
@@ -22,10 +24,12 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    public User(String username, String password, Role role,  String email) {
+    public User(String username, String firstName, String lastName, String password, String email, Role role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.password = password;
-        this.role = role;
         this.email = email;
+        this.role = role;
     }
 }

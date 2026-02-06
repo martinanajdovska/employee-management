@@ -1,9 +1,10 @@
 package com.employeemanagement.backend.service.impl;
 
-import com.employeemanagement.backend.model.DTO.auth.NotificationDTO;
+import com.employeemanagement.backend.model.DTO.NotificationDTO;
 import com.employeemanagement.backend.model.Notification;
 import com.employeemanagement.backend.model.User;
 import com.employeemanagement.backend.model.enums.NotificationType;
+import com.employeemanagement.backend.model.exceptions.ActionNotAllowedException;
 import com.employeemanagement.backend.model.exceptions.NotificationNotFoundException;
 import com.employeemanagement.backend.model.exceptions.UsernameNotFoundException;
 import com.employeemanagement.backend.repository.NotificationRepository;
@@ -59,8 +60,14 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void markAsRead(Long id) {
+    public void markAsRead(String username, Long id) {
+        User user = this.userService.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException(username));
         Notification notification = this.notificationRepository.findById(id).orElseThrow(()-> new NotificationNotFoundException(id));
+
+        if (!notification.getRecipient().equals(user)) {
+            throw new ActionNotAllowedException(String.format("User %s can't open notification with id: %d", username, id));
+        }
+
         notification.setRead(true);
         this.notificationRepository.save(notification);
     }

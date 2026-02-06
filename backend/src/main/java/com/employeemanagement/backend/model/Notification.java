@@ -18,12 +18,12 @@ public class Notification {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "recipient_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User recipient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "actor_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User actor;
 

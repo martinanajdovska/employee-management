@@ -1,7 +1,6 @@
 package com.employeemanagement.backend.controller;
 
-import com.employeemanagement.backend.model.DTO.auth.NotificationDTO;
-import com.employeemanagement.backend.model.Notification;
+import com.employeemanagement.backend.model.DTO.NotificationDTO;
 import com.employeemanagement.backend.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +27,7 @@ public class NotificationController {
 
     @PatchMapping("/api/notifications/{id}")
     public ResponseEntity<Void> readNotification(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id) {
-        this.notificationService.markAsRead(id);
+        this.notificationService.markAsRead(userDetails.getUsername(), id);
         return ResponseEntity.ok().build();
     }
 }

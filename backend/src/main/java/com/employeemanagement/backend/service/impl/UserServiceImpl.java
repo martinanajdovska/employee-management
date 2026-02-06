@@ -22,9 +22,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String username, String password, Role role, String email) {
-        if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-            throw new IllegalArgumentException("Must fill both username and password");
+    public User register(String username, String firstName, String lastName, String password, Role role, String email) {
+        if (username == null || firstName== null || lastName==null || password == null || username.isEmpty() || password.isEmpty()) {
+            throw new IllegalArgumentException("Must fill all fields");
         }
 
         if (this.existsByUsername(username)) {
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
         String hashedPassword = passwordEncoder.encode(password);
 
-        User user = new User(username, hashedPassword, role, email);
+        User user = new User(username, firstName, lastName, hashedPassword, email, role);
 
         return this.userRepository.save(user);
     }

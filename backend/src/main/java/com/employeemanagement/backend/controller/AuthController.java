@@ -49,7 +49,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody SignUpRequestDTO signUpRequest) {
-        userService.register(signUpRequest.getUsername(), signUpRequest.getPassword(), Role.ROLE_USER, signUpRequest.getEmail());
+        userService.register(signUpRequest.getUsername(), signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getPassword(), Role.ROLE_USER, signUpRequest.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }

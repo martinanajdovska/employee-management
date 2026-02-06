@@ -1,6 +1,6 @@
 package com.employeemanagement.backend.config;
 
-import com.employeemanagement.backend.model.DTO.auth.NotificationDTO;
+import com.employeemanagement.backend.model.DTO.NotificationDTO;
 import com.employeemanagement.backend.model.Notification;
 import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;

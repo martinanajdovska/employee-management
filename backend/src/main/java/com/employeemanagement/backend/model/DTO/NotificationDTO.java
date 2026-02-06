@@ -1,4 +1,4 @@
-package com.employeemanagement.backend.model.DTO.auth;
+package com.employeemanagement.backend.model.DTO;
 
 import com.employeemanagement.backend.model.enums.NotificationType;
 import lombok.Data;
