@@ -7,7 +7,7 @@
 2. Run the Docker container
    * Create a .env file and set up your environment variables for the database following the .env.example template
    * ```
-     docker compose up
+     docker-compose up
      ```
 4. Backend
    * Inside the backend folder
