@@ -34,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Transactional
     public void createNotification(String to, String from, String msg, String link, NotificationType type) {
-        User recipient = this.userService.findByUsername(to).orElseThrow(()->new UsernameNotFoundException(to));
+        User recipient = this.userService.findByUsername(to).orElse(null);
         User actor = this.userService.findByUsername(from).orElseThrow(()->new UsernameNotFoundException(from));
 
         Notification notification = new Notification();
@@ -44,9 +44,13 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setLink(link);
         notification.setType(type);
 
+
+
         this.notificationRepository.save(notification);
 
-        messagingTemplate.convertAndSendToUser(to, "/queue/notifications", convertToDTO(notification));
+        if (recipient != null) {
+            messagingTemplate.convertAndSendToUser(to, "/queue/notifications", convertToDTO(notification));
+        }
     }
 
     @Override
