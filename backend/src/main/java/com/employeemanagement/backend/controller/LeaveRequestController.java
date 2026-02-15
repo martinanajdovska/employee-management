@@ -60,7 +60,6 @@ public class LeaveRequestController {
         request.setStatus(status);
         LeaveRequest savedRequest = leaveRepository.save(request);
 
-        // Map the string status to your specific Enum
         NotificationType type = status.equalsIgnoreCase("APPROVED")
                 ? NotificationType.APPROVE
                 : NotificationType.DENY;

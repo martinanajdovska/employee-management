@@ -53,7 +53,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http){
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
@@ -61,8 +61,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers("/api/leave/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers("/api/profile/log-hours").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/events/**").permitAll()
+                        .requestMatchers("/api/events/**").hasRole("ADMIN")
+
+                        .requestMatchers("/api/leave/request").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/leave/status/**").hasRole("ADMIN")
+                        .requestMatchers("/api/leave/all").hasRole("ADMIN")
+
                         .requestMatchers("/api/profile/**").permitAll()
                         .anyRequest().authenticated()
                 )
