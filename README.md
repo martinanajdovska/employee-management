@@ -15,3 +15,9 @@
    ```
     ./mvnw spring-boot:run
    ```
+5. Frontend
+   ```sh
+    cd frontend
+    npm install
+    npm run dev
+   ```
