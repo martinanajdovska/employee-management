@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
     List<Survey> findByEmployeeUsername(String username);
+    List<Survey> findByEmployeeIdOrderByCreatedAtDesc(Long employeeId);
 }
