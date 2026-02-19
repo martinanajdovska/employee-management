@@ -81,4 +81,3 @@ public class NotificationServiceImpl implements NotificationService {
         return this.modelMapper.map(user, NotificationDTO.class);
     }
 }
-
