@@ -30,7 +30,6 @@ public class ProfileController {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Convert raw logs into clean DTOs with payout math
         List<SalarySlipDTO> workHistory = workLogRepository.findByUserId(id).stream()
                 .map(log -> new SalarySlipDTO(
                         log.getMonth(),
@@ -51,6 +50,7 @@ public class ProfileController {
     }
 
     @PostMapping("/log-hours")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<WorkLog> logHours(@RequestBody WorkLogRequestDTO request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -65,6 +65,19 @@ public class ProfileController {
         workLog.setHoursWorked(request.getHoursWorked());
 
         return ResponseEntity.ok(workLogRepository.save(workLog));
+    }
+
+    @GetMapping("/all-employees")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Map<String, Object>>> getAllEmployees() {
+        return ResponseEntity.ok(userRepository.findAll().stream()
+                .map(user -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", user.getId());
+                    map.put("name", user.getFirstName() + " " + user.getLastName());
+                    map.put("department", user.getDepartment());
+                    return map;
+                }).toList());
     }
 
     @GetMapping("/{id}/slips")

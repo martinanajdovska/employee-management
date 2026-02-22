@@ -64,6 +64,9 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/events/**").permitAll()
                         .requestMatchers("/api/events/**").hasRole("ADMIN")
 
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/profile/log-hours").hasRole("ADMIN")
+                        .requestMatchers("/api/profile/all-employees").hasRole("ADMIN")
+
                         .requestMatchers("/api/leave/request").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/leave/status/**").hasRole("ADMIN")
                         .requestMatchers("/api/leave/all").hasRole("ADMIN")
