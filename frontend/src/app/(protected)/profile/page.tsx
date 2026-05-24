@@ -2,9 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
-import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMe } from "@/hooks/useAuth";
-import { useLogHours, useProfileData, useSalarySlips } from "@/hooks/useProfile";
+import { useProfileData, useSalarySlips } from "@/hooks/useProfile";
 
 const months = [
   "JANUARY",
@@ -46,10 +44,8 @@ export default function ProfilePage() {
 
   const profileQuery = useProfileData(meQuery.data?.id);
   const slipsQuery = useSalarySlips(meQuery.data?.id);
-  const logHoursMutation = useLogHours();
 
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), "MMMM").toUpperCase());
-  const [hoursWorked, setHoursWorked] = useState("160");
   const [year, setYear] = useState(String(new Date().getFullYear()));
 
   const selectedSlip = useMemo(
@@ -59,25 +55,6 @@ export default function ProfilePage() {
       ) ?? null,
     [selectedMonth, slipsQuery.data, year]
   );
-
-  async function handleLogHours(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!meQuery.data) return;
-
-    try {
-      await logHoursMutation.mutateAsync({
-        userId: meQuery.data.id,
-        month: selectedMonth,
-        year: Number(year),
-        hoursWorked: Number(hoursWorked)
-      });
-      toast.success("Hours saved successfully");
-    } catch (error) {
-      toast.error("Unable to save hours", {
-        description: error instanceof Error ? error.message : "Try again"
-      });
-    }
-  }
 
   return (
     <section className="space-y-6">
@@ -158,69 +135,41 @@ export default function ProfilePage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Salary slips</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Month</TableHead>
-                  <TableHead>Year</TableHead>
-                  <TableHead>Hours</TableHead>
-                  <TableHead>Payout</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {slipsQuery.data?.length ? (
-                  slipsQuery.data.map((slip) => (
-                    <TableRow key={`${slip.month}-${slip.year}`}>
-                      <TableCell>{slip.month}</TableCell>
-                      <TableCell>{slip.year}</TableCell>
-                      <TableCell>{slip.hoursWorked.toFixed(1)}</TableCell>
-                      <TableCell>${Number(slip.totalPayout).toFixed(2)}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-muted-foreground">
-                      No slips available yet.
-                    </TableCell>
+      <Card>
+        <CardHeader>
+          <CardTitle>Salary slips</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Month</TableHead>
+                <TableHead>Year</TableHead>
+                <TableHead>Hours</TableHead>
+                <TableHead>Payout</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {slipsQuery.data?.length ? (
+                slipsQuery.data.map((slip) => (
+                  <TableRow key={`${slip.month}-${slip.year}`}>
+                    <TableCell>{slip.month}</TableCell>
+                    <TableCell>{slip.year}</TableCell>
+                    <TableCell>{slip.hoursWorked.toFixed(1)}</TableCell>
+                    <TableCell>${Number(slip.totalPayout).toFixed(2)}</TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Log work hours</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form className="space-y-3" onSubmit={handleLogHours}>
-              <div className="space-y-2">
-                <Label htmlFor="hoursWorked">Hours worked</Label>
-                <Input
-                  id="hoursWorked"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  value={hoursWorked}
-                  onChange={(event) => setHoursWorked(event.target.value)}
-                  required
-                />
-              </div>
-
-              <Button className="w-full" disabled={logHoursMutation.isPending}>
-                {logHoursMutation.isPending ? "Saving..." : "Save hours"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-muted-foreground">
+                    No slips available yet.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </section>
   );
 }

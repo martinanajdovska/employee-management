@@ -19,7 +19,8 @@ export default function RegisterPage() {
     firstName: "",
     lastName: "",
     email: "",
-    password: ""
+    password: "",
+    department: ""
   });
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -91,6 +92,18 @@ export default function RegisterPage() {
                 value={form.email}
                 onChange={(event) =>
                   setForm((prev) => ({ ...prev, email: event.target.value }))
+                }
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="department">Department</Label>
+              <Input
+                id="department"
+                value={form.department}
+                onChange={(event) =>
+                  setForm((prev) => ({ ...prev, department: event.target.value }))
                 }
                 required
               />
