@@ -13,7 +13,7 @@ export function useEmployees(filters: EmployeeFilters = {}) {
   return useQuery({
     queryKey: ["employees", filters],
     queryFn: async () => {
-      const users = await apiRequest<User[]>("/api/users");
+      const users = await apiRequest<User[]>("/api/users/all-employees");
       const search = filters.search?.toLowerCase().trim();
       const department = filters.department?.trim();
 
@@ -35,7 +35,7 @@ export function useEmployee(id?: number) {
     queryKey: ["employee", id],
     enabled: Boolean(id),
     queryFn: async () => {
-      const users = await apiRequest<User[]>("/api/users");
+      const users = await apiRequest<User[]>("/api/users/all-employees");
       return users.find((item) => item.id === id) ?? null;
     }
   });
